@@ -12,6 +12,7 @@ from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, COLOR_BG, TITLE
 from src.entites.player import Player
 from src.managers.spawner import Spawner
 from src.managers.collision import CollisionManager
+from src.ui.hud import HUD
 
 
 class Game:
@@ -21,6 +22,7 @@ class Game:
 		pygame.display.set_caption(TITLE)
 		self.clock = pygame.time.Clock()
 		self.running = True
+		self.paused = False
 
 		# shared Sprite Groups
 		self.all_sprites = pygame.sprite.Group()
@@ -32,13 +34,15 @@ class Game:
 		self.player = Player(pos=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
 		self.all_sprites.add(self.player)
 
+		# initialize the HUD
+		self.hud = HUD(self.player, self.enemies)
+
 		self.spawner = Spawner(self.all_sprites, self.enemies, self.player)
 
 		self.pickups = pygame.sprite.Group()
 		self.collision_manager = CollisionManager(
 			self.player, self.enemies, self.projectiles, self.pickups,
 		)
-		# self.hud = HUD(self.player)
 
 	def handle_events(self):
 		for event in pygame.event.get():
@@ -46,7 +50,9 @@ class Game:
 				self.running = False
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
-					self.running = False
+					self.paused = True
+				elif self.paused:
+					self.paused = False
 
 	def update(self, dt):
 
@@ -67,6 +73,7 @@ class Game:
 
 		# draw all active sprites
 		self.all_sprites.draw(self.screen)
+		self.hud.draw(self.screen)
 
 		# draw UI overlay on top
 		# self.hud.draw(self.screen)
@@ -80,5 +87,6 @@ class Game:
 			dt = self.clock.tick(FPS) / 1000.0
 
 			self.handle_events()
-			self.update(dt)
+			if not self.paused:
+				self.update(dt)
 			self.render()
