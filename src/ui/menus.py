@@ -2,7 +2,7 @@ import pygame
 
 from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS
 
-# found a cool and simple start menu example on the internet
+# took a little bit of inspiration from an example start menu found on the internet
 
 WHITE = (255, 255, 255)
 BUTTON_COLOR = (100, 100, 100)
@@ -25,8 +25,8 @@ def start_menu(screen):
 	buttons = [
 		(start_button, "Start"),
 		(settings_button, "Settings"),
-		(exit_button, "Exit"),
-	]
+		(exit_button, "Exit")
+		]
 
 	while True:
 		for event in pygame.event.get():
@@ -47,7 +47,9 @@ def start_menu(screen):
 
 		for button, label in buttons:
 			# check if any of the buttons are hovered over
-			color = HOVER_COLOR if button.collidepoint(mouse_pos) else BUTTON_COLOR
+			if button.collidepoint(mouse_pos):
+				color = HOVER_COLOR 
+			else: color = BUTTON_COLOR
 			pygame.draw.rect(screen, color, button)
 
 			text = font.render(label, True, WHITE)
