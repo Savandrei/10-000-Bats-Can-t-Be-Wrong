@@ -35,10 +35,10 @@ class Spawner:
 			self.timer = 0
 			pos = self.get_perimeter_pos()
 			
-			# Weighted random choice: 70% chance for Bat, 30% chance for Zombie
+			# for now, random choice
 			enemy_class = random.choices([Bat, Zombie, Slime], weights=[50, 30, 20])[0]
 			
-			# Instantiate the chosen enemy and add to groups
+			# instantiate the chosen enemy and add to groups
 			enemy = enemy_class(pos=pos, target_player=self.target)
 			self.all_sprites.add(enemy)
 			self.enemy_group.add(enemy)

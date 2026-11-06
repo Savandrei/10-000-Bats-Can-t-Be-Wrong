@@ -14,7 +14,7 @@ class CollisionManager:
 		# to be implemented when we add XP gems
 
 	def _handle_combat_collisions(self):
-		# 1. projectiles vs enemies
+		# projectiles vs enemies
 		# returns a dict: {Projectile: [hit_Enemy_1, hit_Enemy_2, ...]}
 		hits = pygame.sprite.groupcollide(self.projectile_group, self.enemy_group, False, False)
 		
@@ -30,11 +30,11 @@ class CollisionManager:
 				if not bullet.alive():
 					break
 
-		# 2. enemies vs player
+		# enemies vs player
 		# returns a list of enemies currently touching the player
 		collided_enemies = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
 
 		for enemy in collided_enemies:
 			self.player.take_damage(enemy.damage)
-			# game doesn't know what to do if an enemy touches the player and the game will crash
+			# game doesn't yet know what to do if an enemy touches the player and the game will crash
 			# solution? just don't get hit

@@ -3,7 +3,6 @@ from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, 
 from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand
 import math
 
-
 # trial and error
 PLAYER_HEIGHT = 90
 PLAYER_WIDTH = 60
