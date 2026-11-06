@@ -1,6 +1,6 @@
 import pygame
-from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP
-from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand
+from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_BLACK, COLOR_CRIMSON
+from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent
 import math
 
 # trial and error
@@ -51,6 +51,9 @@ class Player(pygame.sprite.Sprite):
 		self.weapons = []
 		# self.add_weapon(MagicWand(self))
 		self.add_weapon(BulletWand(self))
+		self.add_weapon(SoulSerpent(self))
+		# self.add_weapon(SoulSerpent(self, color = COLOR_BLACK))
+		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
 		# self.add_weapon(BulletWand(self))
 
 		#dash related variables
