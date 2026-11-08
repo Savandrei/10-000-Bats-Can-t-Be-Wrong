@@ -58,3 +58,52 @@ def start_menu(screen):
 
 		pygame.display.flip()
 		clock.tick(FPS)
+
+def pause_menu(screen):
+	font = pygame.font.SysFont("Corbel", 40)
+	clock = pygame.time.Clock()
+	
+	button_width = 200
+	button_height = 60
+	button_x = (SCREEN_WIDTH - button_width) // 2
+
+	resume_button = pygame.Rect(button_x, 260, button_width, button_height)
+	settings_button = pygame.Rect(button_x, 340, button_width, button_height)
+	main_menu_button = pygame.Rect(button_x, 420, button_width, button_height)
+
+	buttons = [
+		(resume_button, "Resume"),
+		(settings_button, "Settings"),
+		(main_menu_button, "Main Menu")
+		]
+
+	while True:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				return "exit"
+
+			# check if any of the buttons got pressed
+			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+				if resume_button.collidepoint(event.pos):
+					return "resume"
+				if main_menu_button.collidepoint(event.pos):
+					return "main_menu"
+				# settings does nothing for now
+
+		mouse_pos = pygame.mouse.get_pos()
+		screen.fill(BACKGROUND_COLOR)
+
+		for button, label in buttons:
+			# check if any of the buttons are hovered over
+			if button.collidepoint(mouse_pos):
+				color = HOVER_COLOR 
+			else: color = BUTTON_COLOR
+			pygame.draw.rect(screen, color, button)
+
+			text = font.render(label, True, WHITE)
+			text_rect = text.get_rect(center=button.center)
+			screen.blit(text, text_rect)
+
+		pygame.display.flip()
+		clock.tick(FPS)
+

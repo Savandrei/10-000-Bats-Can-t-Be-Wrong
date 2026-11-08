@@ -13,6 +13,7 @@ from src.entites.player import Player
 from src.managers.spawner import Spawner
 from src.managers.collision import CollisionManager
 from src.ui.hud import HUD
+from src.ui.menus import pause_menu, start_menu
 
 
 class Game:
@@ -51,8 +52,20 @@ class Game:
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					self.paused = True
-				elif self.paused:
-					self.paused = False
+					choice = pause_menu(self.screen)
+					if choice == "resume":
+						self.paused = False
+					if choice == "exit":
+						self.running = False
+					if choice == "main_menu":
+						choice2 = start_menu(self.screen)
+						if choice2 == "start":
+							self.reset_game()
+							self.paused = False
+						elif choice2 == "exit":
+							self.running = False
+							
+
 
 	def update(self, dt):
 
@@ -90,3 +103,18 @@ class Game:
 			if not self.paused:
 				self.update(dt)
 			self.render()
+
+	def reset_game(self):
+		self.all_sprites.empty()
+		self.enemies.empty()
+		self.projectiles.empty()
+		self.pickups.empty()
+
+		self.player = Player(pos=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+		self.all_sprites.add(self.player)
+
+		self.hud = HUD(self.player, self.enemies)
+		self.spawner = Spawner(self.all_sprites, self.enemies, self.player)
+		self.collision_manager = CollisionManager(
+			self.player, self.enemies, self.projectiles, self.pickups,
+		)

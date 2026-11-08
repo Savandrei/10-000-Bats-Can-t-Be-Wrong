@@ -19,7 +19,7 @@ TITLE = "to be written"
 # to be written
 
 # grass colored picked with color wheel
-COLOR_BG = (169, 210, 45)
+COLOR_BG = (70, 70, 70)
 
 # UI Elements
 # to be written
