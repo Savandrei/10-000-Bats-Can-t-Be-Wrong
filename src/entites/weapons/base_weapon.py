@@ -10,13 +10,13 @@ class BaseWeapon:
         self.level = 1
         self.projectile_number = projectile_number
 
-    def update(self, dt, all_sprites, projectile_group, enemy_group):
+    def update(self, dt, all_sprites, projectile_group, sorted_enemies):
         # ticks the weapon cooldown using delta time (in seconds)
         # fires attack() when cooldown elapses
         self.timer += dt
         if self.timer >= self.cooldown:
             self.timer = 0.0
-            self.attack(all_sprites, projectile_group, enemy_group)
+            self.attack(all_sprites, projectile_group, sorted_enemies)
 
     def attack(self, all_sprites, projectile_group, enemy_group):
         # this is going to get overridden by the subclasses

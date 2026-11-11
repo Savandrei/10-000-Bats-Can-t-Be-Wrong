@@ -4,5 +4,6 @@ from .slash import Slash
 from .meteorite import Meteorite
 from .bullet_wand import BulletWand
 from .Soul_Serpent import SoulSerpent
+from .zephyx_edge import ZephyxEdge
 
-__all__ = ["BaseWeapon", "MagicWand", "Slash", "Meteorite", "BulletWand", "SoulSerpent"]
+__all__ = ["BaseWeapon", "MagicWand", "Slash", "Meteorite", "BulletWand", "SoulSerpent", "ZephyxEdge"]

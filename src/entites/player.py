@@ -1,6 +1,6 @@
 import pygame
 from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_BLACK, COLOR_CRIMSON
-from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent
+from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent, ZephyxEdge
 import math
 
 # trial and error
@@ -18,6 +18,22 @@ class Player(pygame.sprite.Sprite):
 		self.health = PLAYER_MAX_HP
 		self.damage_invulnerable_until = 0
 		self.damage_invulnerability_ms = 1000
+
+		#scythe related variables
+		self.isZephixEdge_unlocked = False
+		self.ZephyxEdge = ZephyxEdge(self)
+		self.ZephyxEdge_cooldown = 5 #in sec
+		self.ZephyxEdge_cooldown *= 1000 #transform in ms
+		self.ZephyxEdge_lastAttack_time = 0
+
+		#dash related variables
+		self.is_dashing = False
+		self.last_dash_time = 0
+		self.is_invincible = False
+		self.dash_dx = 0
+		self.dash_dy = 0
+		self.dash_duration = 60
+		self.dash_cooldown = 1000
 
 		frames = self.load_sprite_sheet("assets/images/player_sprite_sheet.png", PLAYER_WIDTH, PLAYER_HEIGHT, 4, 2)
 
@@ -51,23 +67,20 @@ class Player(pygame.sprite.Sprite):
 		self.weapons = []
 		# self.add_weapon(MagicWand(self))
 		self.add_weapon(BulletWand(self))
-		self.add_weapon(SoulSerpent(self))
+		# self.add_weapon(SoulSerpent(self))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_BLACK))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
-		# self.add_weapon(BulletWand(self))
+		self.add_weapon(ZephyxEdge(self))
 
-		#dash related variables
-		self.is_dashing = False
-		self.last_dash_time = 0
-		self.is_invincible = False
-		self.dash_dx = 0
-		self.dash_dy = 0
-		self.dash_duration = 60
-		self.dash_cooldown = 1000
+		
 
 ##############################################################
 	def add_weapon(self, weapon: BaseWeapon):
-		self.weapons.append(weapon)
+		if isinstance(weapon, ZephyxEdge):
+			self.isZephixEdge_unlocked = True
+		else:
+			self.weapons.append(weapon)
+
 
 ##############################################################
 	def load_sprite_sheet(self, path, frame_width, frame_height, columns, rows):
@@ -123,11 +136,17 @@ class Player(pygame.sprite.Sprite):
 
 
 ############################################################
-	def get_input(self):
+	def get_input(self, dt, all_sprites, projectile_group, sorted_enemies):
 		keys = pygame.key.get_pressed()
 		direction = pygame.math.Vector2(0, 0)
 
 		current_time = pygame.time.get_ticks()
+
+		if keys[pygame.K_q] and self.isZephixEdge_unlocked:
+			if current_time - self.ZephyxEdge_lastAttack_time >= self.ZephyxEdge_cooldown:
+				self.ZephyxEdge_lastAttack_time = current_time
+				self.ZephyxEdge.attack(all_sprites, projectile_group, sorted_enemies)
+			
 
 		# arrow movement
 		if keys[pygame.K_UP]:
@@ -183,7 +202,7 @@ class Player(pygame.sprite.Sprite):
 
 ##############################################################
 	def update(self, dt, all_sprites=None, projectile_group=None, sorted_enemies=None):
-		direction = self.get_input()
+		direction = self.get_input(dt, all_sprites, projectile_group, sorted_enemies)
 		current_time = pygame.time.get_ticks()
 
 		self.update_facing(direction)
