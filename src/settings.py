@@ -12,7 +12,7 @@
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 FPS = 60 #FPS = inf
-TITLE = "to be written"
+TITLE = "10.000 bats can't be wrong"
 
 
 # Color Definitions (RGB)
