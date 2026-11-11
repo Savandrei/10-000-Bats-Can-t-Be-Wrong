@@ -79,6 +79,13 @@ class ZephyxEdgeSlash(pygame.sprite.Sprite):
 			self.timer -= self.frame2_duration
 			self.current_frame += 1
 
+		if self.current_frame == 2:
+			if not projectile_group.has(self):
+				projectile_group.add(self)
+		else:
+			if projectile_group.has(self):
+				projectile_group.remove(self)
+
 		if self.current_frame < 3:
 			base_surf = self.frames[self.current_frame]
 		else:
@@ -136,4 +143,3 @@ class ZephyxEdge(BaseWeapon):
 		scythe_anim.damage = self.damage
 
 		all_sprites.add(scythe_anim)
-		projectile_group.add(scythe_anim)

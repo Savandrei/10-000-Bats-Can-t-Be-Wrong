@@ -245,3 +245,31 @@ class Player(pygame.sprite.Sprite):
 
 		self.health = max(0, self.health - amount)
 		self.damage_invulnerable_until = now + self.damage_invulnerability_ms
+
+	def draw_charge_bar(self, surface):
+		if not self.isZephixEdge_unlocked:
+			return
+
+		current_time = pygame.time.get_ticks()
+		elapsed = current_time - self.ZephyxEdge_lastAttack_time
+		charge_ratio = min(1.0, elapsed / self.ZephyxEdge_cooldown)
+
+		bar_width = 16
+		bar_height = 100
+		margin_right = 20
+		margin_bottom = 20
+
+		bar_x = SCREEN_WIDTH - margin_right - bar_width
+		bar_y = SCREEN_HEIGHT - margin_bottom - bar_height
+
+		bg_rect = pygame.Rect(bar_x, bar_y, bar_width, bar_height)
+		pygame.draw.rect(surface, (20, 20, 20), bg_rect)
+		pygame.draw.rect(surface, (180, 180, 180), bg_rect, 1)
+
+		fill_height = int((bar_height - 2) * charge_ratio)
+		if fill_height > 0:
+			fill_y = (bar_y + bar_height - 1) - fill_height
+			fill_rect = pygame.Rect(bar_x + 1, fill_y, bar_width - 2, fill_height)
+
+			color = (230, 11, 230) if charge_ratio >= 1.0 else (133, 24, 133)
+			pygame.draw.rect(surface, color, fill_rect)
