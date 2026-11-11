@@ -12,14 +12,14 @@ class BaseProjectile(pygame.sprite.Sprite):
         self.speed = speed
         self.damage = damage
         self.pierce = pierce
-        self.lifetime = lifetime  # Lifetime duration in seconds
+        self.lifetime = lifetime  # lifetime duration in seconds
 
     def update(self, dt, *args, **kwargs):
-        # Move projectile using delta time
+        # move projectile using delta time
         self.pos += self.direction * self.speed * dt
         self.rect.center = (round(self.pos.x), round(self.pos.y))
 
-        # Decrement lifetime timer by dt
+        # decrease lifetime timer by dt
         self.lifetime -= dt
         if self.lifetime <= 0:
             self.kill()

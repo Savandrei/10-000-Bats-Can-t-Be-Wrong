@@ -1,7 +1,6 @@
 import pygame
 
 class CollisionManager:
-	# Handles spatial overlaps and combat interactions between game entities
 
 	def __init__(self, player, enemy_group, projectile_group, pickup_group):
 		self.player = player
@@ -11,11 +10,12 @@ class CollisionManager:
 
 	def update(self):
 		self._handle_combat_collisions()
-		# self._handle_pickups()  # To be implemented when we add XP gems
+		# self._handle_pickups()  
+		# to be implemented when we add XP gems
 
 	def _handle_combat_collisions(self):
-		# 1. Projectiles vs Enemies
-		# groupcollide returns a dict: {Projectile: [Hit_Enemy_1, Hit_Enemy_2, ...]}
+		# projectiles vs enemies
+		# returns a dict: {Projectile: [hit_Enemy_1, hit_Enemy_2, ...]}
 		hits = pygame.sprite.groupcollide(self.projectile_group, self.enemy_group, False, False)
 		
 		for bullet, hit_enemies in hits.items():

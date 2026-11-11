@@ -2,7 +2,7 @@ import pygame
 from .base_projectile import BaseProjectile
 
 class SlashHitbox(BaseProjectile):
-    # A stationary, fast-expiring hitbox for sweeping attacks
+    # a stationary, fast-expiring hitbox for sweeping attacks
     def __init__(self, pos, direction):
         super().__init__(
             pos=pos,

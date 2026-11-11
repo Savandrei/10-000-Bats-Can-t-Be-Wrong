@@ -24,7 +24,7 @@ class Bullet(pygame.sprite.Sprite):
 		# rotation
 		if self.direction != (0,0):
 			# as_polar returns (length, angle_in_degrees)
-			# Pygame's Y-axis is inverted (0 is at the top)
+			# pygame's Y-axis is inverted (0 is at the top)
 			angle = -self.direction.as_polar()[1]
 			self.image = pygame.transform.rotate(self.image, angle)
 			self.rect = self.image.get_rect(center=self.rect.center)
