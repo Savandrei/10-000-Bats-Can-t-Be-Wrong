@@ -30,11 +30,9 @@ class CollisionManager:
 				if not bullet.alive():
 					break
 
-		# enemies vs player
-		# returns a list of enemies currently touching the player
-		collided_enemies = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
+		# enemies and player
+		if not self.player.is_invincible:
+			collided_enemies = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
 
-		for enemy in collided_enemies:
-			self.player.take_damage(enemy.damage)
-			# game doesn't yet know what to do if an enemy touches the player and the game will crash
-			# solution? just don't get hit
+			for enemy in collided_enemies:
+				self.player.take_damage(enemy.damage)

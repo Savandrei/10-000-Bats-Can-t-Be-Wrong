@@ -11,7 +11,7 @@ class Spawner:
 		
 		# timing and progression
 		self.timer = 0
-		self.spawn_interval = 0.20  # seconds
+		self.spawn_interval = 0.15  # seconds
 
 	def get_perimeter_pos(self):
 		# calculates a random coordinate outside the screen boundaries

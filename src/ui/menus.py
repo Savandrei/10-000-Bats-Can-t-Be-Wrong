@@ -51,7 +51,7 @@ def start_menu(screen):
 		for button, label in buttons:
 			# check if any of the buttons are hovered over
 			if button.collidepoint(mouse_pos):
-				color = HOVER_COLOR 
+				color = HOVER_COLOR
 			else: color = BUTTON_COLOR
 			pygame.draw.rect(screen, color, button)
 
@@ -65,7 +65,7 @@ def start_menu(screen):
 def pause_menu(screen):
 	font = pygame.font.SysFont("Corbel", 40)
 	clock = pygame.time.Clock()
-	
+
 	button_width = 200
 	button_height = 60
 	button_x = (settings.SCREEN_WIDTH - button_width) // 2
@@ -105,7 +105,7 @@ def pause_menu(screen):
 		for button, label in buttons:
 			# check if any of the buttons are hovered over
 			if button.collidepoint(mouse_pos):
-				color = HOVER_COLOR 
+				color = HOVER_COLOR
 			else: color = BUTTON_COLOR
 			pygame.draw.rect(screen, color, button)
 
