@@ -29,7 +29,7 @@ class Game:
 		self.all_sprites = pygame.sprite.Group()
 		self.enemies = pygame.sprite.Group()
 		self.projectiles = pygame.sprite.Group()
-		# self.pickups = pygame.sprite.Group()
+		self.pickups = pygame.sprite.Group()
 
 		# instantiate Entities & Systems
 		self.player = Player(pos=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2))
@@ -38,11 +38,11 @@ class Game:
 		# initialize the HUD
 		self.hud = HUD(self.player, self.enemies)
 
-		self.spawner = Spawner(self.all_sprites, self.enemies, self.player)
+		self.spawner = Spawner(self.all_sprites, self.enemies, self.pickups, self.player)
 
-		self.pickups = pygame.sprite.Group()
 		self.collision_manager = CollisionManager(
-			self.player, self.enemies, self.projectiles, self.pickups,
+			self.player, self.all_sprites, self.enemies,
+			self.projectiles, self.pickups,
 		)
 
 	def handle_events(self):
@@ -65,7 +65,7 @@ class Game:
 							self.paused = False
 						elif choice2 == "exit":
 							self.running = False
-							
+
 
 
 	def update(self, dt):
@@ -117,5 +117,6 @@ class Game:
 		self.hud = HUD(self.player, self.enemies)
 		self.spawner = Spawner(self.all_sprites, self.enemies, self.player)
 		self.collision_manager = CollisionManager(
-			self.player, self.enemies, self.projectiles, self.pickups,
+			self.player, self.all_sprites, self.enemies,
+			self.projectiles, self.pickups,
 		)

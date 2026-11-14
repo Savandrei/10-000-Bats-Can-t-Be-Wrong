@@ -19,6 +19,10 @@ class Player(pygame.sprite.Sprite):
 		self.damage_invulnerable_until = 0
 		self.damage_invulnerability_ms = 1000
 
+		self.exp = 0
+		self.level = 1
+		self.exp_to_next_level = 50
+
 		#scythe related variables
 		self.isZephixEdge_unlocked = False
 		self.ZephyxEdge = ZephyxEdge(self)
@@ -72,7 +76,7 @@ class Player(pygame.sprite.Sprite):
 		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
 		self.add_weapon(ZephyxEdge(self))
 
-		
+
 
 ##############################################################
 	def add_weapon(self, weapon: BaseWeapon):
@@ -146,7 +150,7 @@ class Player(pygame.sprite.Sprite):
 			if current_time - self.ZephyxEdge_lastAttack_time >= self.ZephyxEdge_cooldown:
 				self.ZephyxEdge_lastAttack_time = current_time
 				self.ZephyxEdge.attack(all_sprites, projectile_group, sorted_enemies)
-			
+
 
 		# arrow movement
 		if keys[pygame.K_UP]:
@@ -245,3 +249,12 @@ class Player(pygame.sprite.Sprite):
 
 		self.health = max(0, self.health - amount)
 		self.damage_invulnerable_until = now + self.damage_invulnerability_ms
+
+##############################################################
+	def gain_exp(self, amount):
+		self.exp += amount
+		if self.exp >= self.exp_to_next_level:
+			print(f"Level Up! Now Level {self.level}")
+			self.level += 1
+			self.exp -= self.exp_to_next_level
+			self.exp_to_next_level = int(self.exp_to_next_level * 1.25)
