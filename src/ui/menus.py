@@ -70,13 +70,11 @@ def pause_menu(screen):
 	button_height = 60
 	button_x = (settings.SCREEN_WIDTH - button_width) // 2
 
-	resume_button = pygame.Rect(button_x, 260, button_width, button_height)
-	settings_button = pygame.Rect(button_x, 340, button_width, button_height)
-	main_menu_button = pygame.Rect(button_x, 420, button_width, button_height)
+	resume_button = pygame.Rect(button_x, 300, button_width, button_height)
+	main_menu_button = pygame.Rect(button_x, 380, button_width, button_height)
 
 	buttons = [
 		(resume_button, "Resume"),
-		(settings_button, "Settings"),
 		(main_menu_button, "Main Menu")
 		]
 
@@ -91,11 +89,6 @@ def pause_menu(screen):
 			if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
 				if resume_button.collidepoint(event.pos):
 					return "resume"
-				if settings_button.collidepoint(event.pos):
-					res = settings_menu(screen)
-					if res == "exit":
-						return "exit"
-					screen = pygame.display.get_surface()
 				if main_menu_button.collidepoint(event.pos):
 					return "main_menu"
 
