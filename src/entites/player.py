@@ -426,8 +426,9 @@ class Player(pygame.sprite.Sprite):
 		margin_right = 20
 		margin_bottom = 20
 
-		bar_x = SCREEN_WIDTH - margin_right - bar_width
-		bar_y = SCREEN_HEIGHT - margin_bottom - bar_height
+		surface_width, surface_height = surface.get_size()
+		bar_x = surface_width - margin_right - bar_width
+		bar_y = surface_height - margin_bottom - bar_height
 
 		bg_rect = pygame.Rect(bar_x, bar_y, bar_width, bar_height)
 		pygame.draw.rect(surface, (20, 20, 20), bg_rect)
