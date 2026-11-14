@@ -75,8 +75,7 @@ class Game:
 		self.all_sprites.draw(self.screen)
 		self.hud.draw(self.screen)
 
-		# draw UI overlay on top
-		# self.hud.draw(self.screen)
+		self.player.draw_charge_bar(self.screen)
 
 		# flip display buffers
 		pygame.display.update()

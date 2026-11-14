@@ -1,5 +1,5 @@
 import pygame
-from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_BLACK, COLOR_CRIMSON
+from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_CYAN
 from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent, ZephyxEdge
 import math
 
@@ -26,6 +26,31 @@ class Player(pygame.sprite.Sprite):
 		self.ZephyxEdge_cooldown *= 1000 #transform in ms
 		self.ZephyxEdge_lastAttack_time = 0
 
+		#Soul serpent aoe variables
+		self.isSoulSerpent_unlocked = False
+		self.SoulSerpent = SoulSerpent(self)
+		self.SoulSerpent_cooldown = 5 #in sec
+		self.SoulSerpent_cooldown *= 1000 #transform in ms
+		self.SoulSerpent_lastAttack_time = 0
+
+		self.ss_state = 'idle'
+		self.ss_attack_anim_ms = 250
+		self.ss_center_delay_ms = 1000
+		self.ss_initial_window_ms = 5000
+		self.ss_window_ms = self.ss_initial_window_ms
+		self.ss_anim_end_time = 0
+		self.ss_check_start_time = 0
+		self.ss_check_end_time = 0
+		self.e_was_pressed = False
+		self.ss_color = COLOR_CYAN
+		self.SoulSerpent.projectile_number = 2
+
+		self.ss_attack_sound = pygame.mixer.Sound("assets/sounds/ss_attack.wav")
+		self.ss_repAttack_sound = pygame.mixer.Sound("assets/sounds/repeated.wav")
+		self.ss_attack_sound.set_volume(0.5)
+		self.ss_repAttack_value = 0
+		self.ss_repAttack_sound.set_volume(self.ss_repAttack_value)
+
 		#dash related variables
 		self.is_dashing = False
 		self.last_dash_time = 0
@@ -48,6 +73,8 @@ class Player(pygame.sprite.Sprite):
 			'up_left': frames[7],
 		}
 
+		self.ss_attack_sprite, self.ss_stand_sprite, self.ss_glow_sprite = self.load_soul_serpent_sprites()
+
 		self.facing = 'down'
 		self.image = self.sprites[self.facing]
 
@@ -67,10 +94,10 @@ class Player(pygame.sprite.Sprite):
 		self.weapons = []
 		# self.add_weapon(MagicWand(self))
 		self.add_weapon(BulletWand(self))
-		# self.add_weapon(SoulSerpent(self))
+		self.add_weapon(SoulSerpent(self))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_BLACK))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
-		self.add_weapon(ZephyxEdge(self))
+		# self.add_weapon(ZephyxEdge(self))
 
 		
 
@@ -78,6 +105,8 @@ class Player(pygame.sprite.Sprite):
 	def add_weapon(self, weapon: BaseWeapon):
 		if isinstance(weapon, ZephyxEdge):
 			self.isZephixEdge_unlocked = True
+		elif isinstance(weapon, SoulSerpent):
+			self.isSoulSerpent_unlocked = True
 		else:
 			self.weapons.append(weapon)
 
@@ -102,6 +131,114 @@ class Player(pygame.sprite.Sprite):
 				frames.append(frame)
 
 		return frames
+
+##############################################################
+
+	def load_soul_serpent_sprites(self):
+			attack_raw = pygame.image.load("assets/images/SoulSerpent_attack.png").convert_alpha()
+			attack_sprite = pygame.transform.scale(attack_raw, (PLAYER_HEIGHT, PLAYER_HEIGHT))
+
+			sheet_raw = pygame.image.load("assets/images/SoulSerpent_skillCheck.png").convert_alpha()
+			if sheet_raw.get_width() > sheet_raw.get_height() * 1.2:
+				half_w = sheet_raw.get_width() // 2
+				h = sheet_raw.get_height()
+
+				stand_raw = pygame.Surface((half_w, h), pygame.SRCALPHA)
+				stand_raw.blit(sheet_raw, (0, 0), (0, 0, half_w, h))
+
+				glow_raw = pygame.Surface((half_w, h), pygame.SRCALPHA)
+				glow_raw.blit(sheet_raw, (0, 0), (half_w, 0, half_w, h))
+			else:
+				stand_raw = None
+				glow_raw = sheet_raw
+
+			scale_ratio = PLAYER_HEIGHT / glow_raw.get_height()
+			target_width = round(glow_raw.get_width() * scale_ratio)
+			glow_sprite = pygame.transform.scale(glow_raw, (target_width, PLAYER_HEIGHT))
+
+			if stand_raw is not None:
+				stand_ratio = PLAYER_HEIGHT / stand_raw.get_height()
+				stand_width = round(stand_raw.get_width() * stand_ratio)
+				stand_sprite = pygame.transform.scale(stand_raw, (stand_width, PLAYER_HEIGHT))
+			else:
+				stand_sprite = None
+
+			return attack_sprite, stand_sprite, glow_sprite
+
+##############################################################
+	def set_soul_serpent_sprite(self, sprite):
+		self.image = sprite
+		self.rect = self.image.get_rect(center=self.rect.center)
+
+##############################################################
+	def trigger_soul_serpent_attack(self, current_time, all_sprites, projectile_group, sorted_enemies, is_chained=False):
+
+		self.ss_attack_sound.play()
+		self.ss_repAttack_sound.play()
+		self.ss_repAttack_value = min(1, self.ss_repAttack_value + 0.2)
+		self.ss_repAttack_sound.set_volume(self.ss_repAttack_value)
+
+		self.SoulSerpent.attack(all_sprites, projectile_group, sorted_enemies, self.ss_color)
+
+
+		if is_chained:
+			self.ss_window_ms *= 0.7
+			if (self.ss_color[1] > 0):
+				self.ss_color = (0, self.ss_color[1] - 60, self.ss_color[2] -  75)
+			else:
+				self.ss_color = (0, 0 , 0)
+		else:
+			self.ss_window_ms = self.ss_initial_window_ms
+
+		center_time = current_time + self.ss_center_delay_ms
+		half_window = self.ss_window_ms / 2.0
+
+		self.SoulSerpent.projectile_number += 1
+		self.ss_state = 'attack_anim'
+		self.ss_anim_end_time = current_time + self.ss_attack_anim_ms
+		self.ss_check_start_time = center_time - half_window
+		self.ss_check_end_time = center_time + half_window
+		self.set_soul_serpent_sprite(self.ss_attack_sprite)
+
+##############################################################
+	def reset_soul_serpent_combo(self, current_time):
+		self.ss_state = 'idle'
+		self.ss_window_ms = self.ss_initial_window_ms
+		self.SoulSerpent_lastAttack_time = current_time
+		self.set_soul_serpent_sprite(self.sprites[self.facing])
+		self.ss_color = COLOR_CYAN
+		self.SoulSerpent.projectile_number = 2
+		self.ss_repAttack_value = 0
+
+##############################################################
+	def update_soul_serpent_state(self, current_time, e_just_pressed, all_sprites, projectile_group, sorted_enemies):
+		if not self.isSoulSerpent_unlocked:
+			return
+
+		if self.ss_state == 'idle':
+			if e_just_pressed and current_time - self.SoulSerpent_lastAttack_time >= self.SoulSerpent_cooldown:
+				self.trigger_soul_serpent_attack(current_time, all_sprites, projectile_group, sorted_enemies, is_chained=False)
+
+		elif self.ss_state == 'attack_anim':
+			if current_time >= self.ss_anim_end_time:
+				self.ss_state = 'waiting_for_check'
+				self.set_soul_serpent_sprite(self.ss_stand_sprite or self.sprites[self.facing])
+			elif e_just_pressed:
+				self.reset_soul_serpent_combo(current_time)
+
+		elif self.ss_state == 'waiting_for_check':
+			if e_just_pressed:
+				self.reset_soul_serpent_combo(current_time)
+			elif current_time >= self.ss_check_start_time:
+				self.ss_state = 'skill_check'
+				self.set_soul_serpent_sprite(self.ss_glow_sprite)
+
+		elif self.ss_state == 'skill_check':
+			if current_time <= self.ss_check_end_time:
+				if e_just_pressed:
+					self.trigger_soul_serpent_attack(current_time, all_sprites, projectile_group, sorted_enemies, is_chained=True)
+			else:
+				self.reset_soul_serpent_combo(current_time)
 
 ##############################################################
 	def update_facing(self, direction):
@@ -130,9 +267,10 @@ class Player(pygame.sprite.Sprite):
 
 		if facing != self.facing:
 			self.facing = facing
-			self.image = self.sprites[self.facing]
+			if self.ss_state == 'idle':
+				self.image = self.sprites[self.facing]
 
-			self.rect = self.image.get_rect(center=self.rect.center)
+				self.rect = self.image.get_rect(center=self.rect.center)
 
 
 ############################################################
@@ -146,7 +284,16 @@ class Player(pygame.sprite.Sprite):
 			if current_time - self.ZephyxEdge_lastAttack_time >= self.ZephyxEdge_cooldown:
 				self.ZephyxEdge_lastAttack_time = current_time
 				self.ZephyxEdge.attack(all_sprites, projectile_group, sorted_enemies)
-			
+
+
+		e_pressed = keys[pygame.K_e]
+		e_just_pressed = e_pressed and not self.e_was_pressed
+		self.e_was_pressed = e_pressed
+
+		self.update_soul_serpent_state(current_time, e_just_pressed, all_sprites, projectile_group, sorted_enemies)
+
+		if self.ss_state != 'idle':
+			return direction
 
 		# arrow movement
 		if keys[pygame.K_UP]:
@@ -207,7 +354,12 @@ class Player(pygame.sprite.Sprite):
 
 		self.update_facing(direction)
 
-		if self.is_dashing:
+		if self.ss_state != 'idle':
+			self.is_dashing = False
+			self.is_invincible = False
+			self.speed = PLAYER_SPEED
+			direction = pygame.math.Vector2(0, 0)
+		elif self.is_dashing:
 			# if dash ends
 			if current_time - self.last_dash_time >= self.dash_duration:
 				self.is_dashing = False
@@ -245,3 +397,39 @@ class Player(pygame.sprite.Sprite):
 
 		self.health = max(0, self.health - amount)
 		self.damage_invulnerable_until = now + self.damage_invulnerability_ms
+
+	def draw_charge_bar(self, surface):
+		if not self.isZephixEdge_unlocked and not self.isSoulSerpent_unlocked:
+			return
+
+		current_time = pygame.time.get_ticks()
+
+		if (self.isZephixEdge_unlocked):
+			elapsed = current_time - self.ZephyxEdge_lastAttack_time
+			charge_ratio = min(1.0, elapsed / self.ZephyxEdge_cooldown)
+		else:
+			elapsed = current_time - self.SoulSerpent_lastAttack_time
+			charge_ratio = min(1.0, elapsed / self.SoulSerpent_cooldown)
+
+		bar_width = 16
+		bar_height = 100
+		margin_right = 20
+		margin_bottom = 20
+
+		bar_x = SCREEN_WIDTH - margin_right - bar_width
+		bar_y = SCREEN_HEIGHT - margin_bottom - bar_height
+
+		bg_rect = pygame.Rect(bar_x, bar_y, bar_width, bar_height)
+		pygame.draw.rect(surface, (20, 20, 20), bg_rect)
+		pygame.draw.rect(surface, (180, 180, 180), bg_rect, 1)
+
+		fill_height = int((bar_height - 2) * charge_ratio)
+		if fill_height > 0:
+			fill_y = (bar_y + bar_height - 1) - fill_height
+			fill_rect = pygame.Rect(bar_x + 1, fill_y, bar_width - 2, fill_height)
+
+			if self.isZephixEdge_unlocked:
+				color = (230, 11, 230) if charge_ratio >= 1.0 else (133, 24, 133)
+			else:
+				color = (0, 255, 255) if charge_ratio >= 1.0 else (0, 140, 255)
+			pygame.draw.rect(surface, color, fill_rect)
