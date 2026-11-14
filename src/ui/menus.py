@@ -14,20 +14,21 @@ def start_menu(screen):
 
 	button_width = 200
 	button_height = 60
-	button_x = (settings.SCREEN_WIDTH - button_width) // 2
-
-	# create the hitboxes for the buttons
-	start_button = pygame.Rect(button_x, 260, button_width, button_height)
-	settings_button = pygame.Rect(button_x, 340, button_width, button_height)
-	exit_button = pygame.Rect(button_x, 420, button_width, button_height)
-
-	buttons = [
-		(start_button, "Start"),
-		(settings_button, "Settings"),
-		(exit_button, "Exit")
-		]
 
 	while True:
+		button_x = (settings.SCREEN_WIDTH - button_width) // 2
+
+		# create the hitboxes for the buttons
+		start_button = pygame.Rect(button_x, 260, button_width, button_height)
+		settings_button = pygame.Rect(button_x, 340, button_width, button_height)
+		exit_button = pygame.Rect(button_x, 420, button_width, button_height)
+
+		buttons = [
+			(start_button, "Start"),
+			(settings_button, "Settings"),
+			(exit_button, "Exit")
+			]
+
 		for event in pygame.event.get():
 			# if you want to exit the old fashioned way
 			if event.type == pygame.QUIT:
@@ -68,17 +69,18 @@ def pause_menu(screen):
 
 	button_width = 200
 	button_height = 60
-	button_x = (settings.SCREEN_WIDTH - button_width) // 2
-
-	resume_button = pygame.Rect(button_x, 300, button_width, button_height)
-	main_menu_button = pygame.Rect(button_x, 380, button_width, button_height)
-
-	buttons = [
-		(resume_button, "Resume"),
-		(main_menu_button, "Main Menu")
-		]
 
 	while True:
+		button_x = (settings.SCREEN_WIDTH - button_width) // 2
+
+		resume_button = pygame.Rect(button_x, 300, button_width, button_height)
+		main_menu_button = pygame.Rect(button_x, 380, button_width, button_height)
+
+		buttons = [
+			(resume_button, "Resume"),
+			(main_menu_button, "Main Menu")
+			]
+
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				return "exit"
@@ -128,6 +130,12 @@ def settings_menu(screen):
 	fps_button = pygame.Rect(button_x, 260, button_width, button_height)
 	back_button = pygame.Rect(button_x, 460, button_width, button_height)
 	while True:
+		button_x = (settings.SCREEN_WIDTH - button_width) // 2
+
+		res_button = pygame.Rect(button_x, 160, button_width, button_height)
+		fps_button = pygame.Rect(button_x, 260, button_width, button_height)
+		back_button = pygame.Rect(button_x, 460, button_width, button_height)
+
 		current_res = (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
 		# create the hitboxes for the dropdown options
@@ -196,12 +204,12 @@ def settings_menu(screen):
 
 		# placeholder symbols, will replace with something else later
 		if res_open:
-			res_arrow = "^"
+			res_arrow = "v"
 		else:
 			res_arrow = "<"
 
 		if fps_open:
-			fps_arrow = "^"
+			fps_arrow = "v"
 		else:
 			fps_arrow = "<"
 

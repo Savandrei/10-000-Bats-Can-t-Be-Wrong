@@ -19,14 +19,10 @@ TITLE = "10.000 bats can't be wrong"
 # to be written
 
 # grass colored picked with color wheel
-<<<<<<< HEAD
-COLOR_BG = (70, 70, 70)
-=======
-COLOR_BG = (169, 210, 45)
+COLOR_BG = (80, 80, 80)
 COLOR_BLACK = (1, 2, 3)
 COLOR_CRIMSON = (255, 60, 40)
 
->>>>>>> 34b00cd69129a8f7e7ba13da4d06d1c56ab38bce
 
 # UI Elements
 # to be written
