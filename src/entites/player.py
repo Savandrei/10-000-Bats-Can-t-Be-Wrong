@@ -98,10 +98,10 @@ class Player(pygame.sprite.Sprite):
 		self.weapons = []
 		# self.add_weapon(MagicWand(self))
 		self.add_weapon(BulletWand(self))
-		self.add_weapon(SoulSerpent(self))
+		# self.add_weapon(SoulSerpent(self))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_BLACK))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
-		# self.add_weapon(ZephyxEdge(self))
+		self.add_weapon(ZephyxEdge(self))
 
 
 
@@ -113,7 +113,6 @@ class Player(pygame.sprite.Sprite):
 			self.isSoulSerpent_unlocked = True
 		else:
 			self.weapons.append(weapon)
-
 
 ##############################################################
 	def load_sprite_sheet(self, path, frame_width, frame_height, columns, rows):
@@ -137,7 +136,6 @@ class Player(pygame.sprite.Sprite):
 		return frames
 
 ##############################################################
-
 	def load_soul_serpent_sprites(self):
 			attack_raw = pygame.image.load("assets/images/SoulSerpent_attack.png").convert_alpha()
 			attack_sprite = pygame.transform.scale(attack_raw, (PLAYER_HEIGHT, PLAYER_HEIGHT))
@@ -276,7 +274,6 @@ class Player(pygame.sprite.Sprite):
 
 				self.rect = self.image.get_rect(center=self.rect.center)
 
-
 ############################################################
 	def get_input(self, dt, all_sprites, projectile_group, sorted_enemies):
 		keys = pygame.key.get_pressed()
@@ -402,12 +399,10 @@ class Player(pygame.sprite.Sprite):
 		self.health = max(0, self.health - amount)
 		self.damage_invulnerable_until = now + self.damage_invulnerability_ms
 
-
 ##############################################################
 	def gain_exp(self, amount):
 		self.exp += amount
 		if self.exp >= self.exp_to_next_level:
-			print(f"Level Up! Now Level {self.level}")
 			self.level += 1
 			self.exp -= self.exp_to_next_level
 			self.exp_to_next_level = int(self.exp_to_next_level * 1.25)

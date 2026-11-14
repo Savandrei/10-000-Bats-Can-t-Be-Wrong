@@ -27,6 +27,10 @@ class HUD:
         surface.blit(hp_text, (16, 16))
         self._draw_bar(surface, pygame.Rect(16, 44, 180, 16), self.player.health, PLAYER_MAX_HP, )
 
+        # exp underneath hp
+        level_text = self.font.render(f"Level: {self.player.level}", True, (255, 255, 255))
+        surface.blit(level_text, (16, 66))
+
         # enemy hp underneath them
         for enemy in self.enemies:
             bar_width = max(36, enemy.rect.width)

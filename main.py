@@ -9,7 +9,7 @@ def main():
 	pygame.init()
 	pygame.mixer.init()
 
-	screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+	screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)) 
 	pygame.display.set_caption(settings.TITLE)
 
 	choice = start_menu(screen)
