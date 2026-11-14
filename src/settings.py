@@ -11,7 +11,7 @@
 
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
-FPS = 60 #FPS = inf
+FPS = 180 #FPS = inf
 TITLE = "10.000 bats can't be wrong"
 
 
@@ -20,6 +20,7 @@ TITLE = "10.000 bats can't be wrong"
 
 # grass colored picked with color wheel
 COLOR_BG = (80, 80, 80)
+COLOR_CYAN = (0, 180, 255)
 COLOR_BLACK = (1, 2, 3)
 COLOR_CRIMSON = (255, 60, 40)
 
