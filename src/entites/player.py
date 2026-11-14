@@ -50,10 +50,10 @@ class Player(pygame.sprite.Sprite):
 		self.SoulSerpent.projectile_number = 2
 
 		self.ss_attack_sound = pygame.mixer.Sound("assets/sounds/ss_attack.wav")
-		self.ss_repAttack_sound = pygame.mixer.Sound("assets/sounds/repeated.wav")
+		self.ss_repAttack2_sound = pygame.mixer.Sound("assets/sounds/repeated2.wav")
 		self.ss_attack_sound.set_volume(0.5)
-		self.ss_repAttack_value = 0
-		self.ss_repAttack_sound.set_volume(self.ss_repAttack_value)
+		self.ss_repAttack_value = 0.05
+		self.ss_repAttack2_sound.set_volume(self.ss_repAttack_value)
 
 		#dash related variables
 		self.is_dashing = False
@@ -96,11 +96,8 @@ class Player(pygame.sprite.Sprite):
 		self.speed = PLAYER_SPEED
 
 		self.weapons = []
-		# self.add_weapon(MagicWand(self))
 		self.add_weapon(BulletWand(self))
-		# self.add_weapon(SoulSerpent(self))
-		# self.add_weapon(SoulSerpent(self, color = COLOR_BLACK))
-		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
+		self.add_weapon(SoulSerpent(self))
 		self.add_weapon(ZephyxEdge(self))
 
 
@@ -176,9 +173,9 @@ class Player(pygame.sprite.Sprite):
 	def trigger_soul_serpent_attack(self, current_time, all_sprites, projectile_group, sorted_enemies, is_chained=False):
 
 		self.ss_attack_sound.play()
-		self.ss_repAttack_sound.play()
-		self.ss_repAttack_value = min(1, self.ss_repAttack_value + 0.2)
-		self.ss_repAttack_sound.set_volume(self.ss_repAttack_value)
+		self.ss_repAttack2_sound.play()
+		self.ss_repAttack_value = min(1, self.ss_repAttack_value * 2)
+		self.ss_repAttack2_sound.set_volume(self.ss_repAttack_value)
 
 		self.SoulSerpent.attack(all_sprites, projectile_group, sorted_enemies, self.ss_color)
 
@@ -210,7 +207,7 @@ class Player(pygame.sprite.Sprite):
 		self.set_soul_serpent_sprite(self.sprites[self.facing])
 		self.ss_color = COLOR_CYAN
 		self.SoulSerpent.projectile_number = 2
-		self.ss_repAttack_value = 0
+		self.ss_repAttack_value = 0.05
 
 ##############################################################
 	def update_soul_serpent_state(self, current_time, e_just_pressed, all_sprites, projectile_group, sorted_enemies):
