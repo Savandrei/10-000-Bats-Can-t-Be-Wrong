@@ -114,7 +114,7 @@ class Game:
 		self.all_sprites.add(self.player)
 
 		self.hud = HUD(self.player, self.enemies)
-		self.spawner = Spawner(self.all_sprites, self.enemies, self.player)
+		self.spawner = Spawner(self.all_sprites, self.enemies, self.pickups, self.player)
 		self.collision_manager = CollisionManager(
 			self.player, self.all_sprites, self.enemies,
 			self.projectiles, self.pickups,
