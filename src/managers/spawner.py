@@ -1,5 +1,5 @@
 import random
-from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT
+import pygame
 from src.entites.enemies import Bat, Zombie, Slime
 
 class Spawner:
@@ -15,18 +15,19 @@ class Spawner:
 		self.spawn_interval = 0.03  # seconds
 
 	def get_perimeter_pos(self):
+		screen_width, screen_height = pygame.display.get_surface().get_size()
 		# calculates a random coordinate outside the screen boundaries
 		side = random.choice(["top", "bottom", "left", "right"])
-		offset = 50  # spawn 50 pixels off-screen so they don't pop in
+		offset = 50
 
 		if side == "top":
-			return random.randint(0, SCREEN_WIDTH), -offset
+			return random.randint(0, screen_width), -offset
 		elif side == "bottom":
-			return random.randint(0, SCREEN_WIDTH), SCREEN_HEIGHT + offset
+			return random.randint(0, screen_width), screen_height + offset
 		elif side == "left":
-			return -offset, random.randint(0, SCREEN_HEIGHT)
+			return -offset, random.randint(0, screen_height)
 		else: # right
-			return SCREEN_WIDTH + offset, random.randint(0, SCREEN_HEIGHT)
+			return screen_width + offset, random.randint(0, screen_height)
 
 	def update(self, dt):
 		# ticks the spawn timer and creates enemies
