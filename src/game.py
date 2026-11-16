@@ -88,8 +88,7 @@ class Game:
 		# draw all active sprites
 		self.all_sprites.draw(self.screen)
 		self.hud.draw(self.screen)
-
-		self.player.draw_charge_bar(self.screen)
+		self.hud.draw_charge_bar(self.screen)
 
 		# flip display buffers
 		pygame.display.update()
