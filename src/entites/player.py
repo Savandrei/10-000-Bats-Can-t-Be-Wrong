@@ -1,5 +1,5 @@
 import pygame
-from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_CYAN
+from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_CYAN, COLOR_CRIMSON
 from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent, ZephyxEdge
 import math
 
@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
 		#scythe related variables
 		self.isZephixEdge_unlocked = False
 		self.ZephyxEdge = ZephyxEdge(self)
-		self.ZephyxEdge_cooldown = 5 #in sec
+		self.ZephyxEdge_cooldown = 0.2 #in sec
 		self.ZephyxEdge_cooldown *= 1000 #transform in ms
 		self.ZephyxEdge_lastAttack_time = 0
 
@@ -48,12 +48,15 @@ class Player(pygame.sprite.Sprite):
 		self.e_was_pressed = False
 		self.ss_color = COLOR_CYAN
 		self.SoulSerpent.projectile_number = 2
+		self.ss_counter = 0
 
 		self.ss_attack_sound = pygame.mixer.Sound("assets/sounds/ss_attack.wav")
 		self.ss_repAttack2_sound = pygame.mixer.Sound("assets/sounds/repeated2.wav")
+		self.ss_repAttack3_sound = pygame.mixer.Sound("assets/sounds/repeated_end260.mp3")
 		self.ss_attack_sound.set_volume(0.5)
 		self.ss_repAttack_value = 0.05
 		self.ss_repAttack2_sound.set_volume(self.ss_repAttack_value)
+		self.ss_repAttack3_sound.set_volume(1)
 
 		#dash related variables
 		self.is_dashing = False
@@ -172,20 +175,26 @@ class Player(pygame.sprite.Sprite):
 ##############################################################
 	def trigger_soul_serpent_attack(self, current_time, all_sprites, projectile_group, sorted_enemies, is_chained=False):
 
+		self.ss_counter += 1
+
 		self.ss_attack_sound.play()
 		self.ss_repAttack2_sound.play()
 		self.ss_repAttack_value = min(1, self.ss_repAttack_value * 2)
 		self.ss_repAttack2_sound.set_volume(self.ss_repAttack_value)
+		if self.ss_counter > 9:
+			self.ss_repAttack3_sound.play()
 
 		self.SoulSerpent.attack(all_sprites, projectile_group, sorted_enemies, self.ss_color)
 
 
 		if is_chained:
 			self.ss_window_ms *= 0.7
-			if (self.ss_color[1] > 0):
+			if (self.ss_counter <= 4):
 				self.ss_color = (0, self.ss_color[1] - 60, self.ss_color[2] -  75)
+			elif (self.ss_counter <= 8):
+				self.ss_color = (0, 0, 0)
 			else:
-				self.ss_color = (0, 0 , 0)
+				self.ss_color = (255, 255, 255)
 		else:
 			self.ss_window_ms = self.ss_initial_window_ms
 
@@ -208,6 +217,7 @@ class Player(pygame.sprite.Sprite):
 		self.ss_color = COLOR_CYAN
 		self.SoulSerpent.projectile_number = 2
 		self.ss_repAttack_value = 0.05
+		self.ss_counter = 0
 
 ##############################################################
 	def update_soul_serpent_state(self, current_time, e_just_pressed, all_sprites, projectile_group, sorted_enemies):
