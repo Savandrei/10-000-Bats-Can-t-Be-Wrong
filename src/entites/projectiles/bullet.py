@@ -18,12 +18,11 @@ class Bullet(pygame.sprite.Sprite):
 
 		# outer layer
 		pygame.draw.rect(self.image, (0, 0, 0, 100), (0, 0, 40, 20))
-		# inner layer(with color)
+		# inner layer
 		pygame.draw.rect(self.image, (255, 220, 50), (5, 5, 30, 10))
 
 		# rotation
 		if self.direction != (0,0):
-			# as_polar returns (length, angle_in_degrees)
 			# pygame's Y-axis is inverted (0 is at the top)
 			angle = -self.direction.as_polar()[1]
 			self.image = pygame.transform.rotate(self.image, angle)

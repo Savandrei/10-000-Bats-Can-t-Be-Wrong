@@ -1,5 +1,5 @@
 import pygame
-from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_CYAN
+from src.settings import PLAYER_SPEED, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP, COLOR_CYAN, COLOR_CRIMSON
 from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent, ZephyxEdge
 import math
 
@@ -19,10 +19,14 @@ class Player(pygame.sprite.Sprite):
 		self.damage_invulnerable_until = 0
 		self.damage_invulnerability_ms = 1000
 
+		self.exp = 0
+		self.level = 1
+		self.exp_to_next_level = 50
+
 		#scythe related variables
 		self.isZephixEdge_unlocked = False
 		self.ZephyxEdge = ZephyxEdge(self)
-		self.ZephyxEdge_cooldown = 5 #in sec
+		self.ZephyxEdge_cooldown = 0.2 #in sec
 		self.ZephyxEdge_cooldown *= 1000 #transform in ms
 		self.ZephyxEdge_lastAttack_time = 0
 
@@ -44,12 +48,15 @@ class Player(pygame.sprite.Sprite):
 		self.e_was_pressed = False
 		self.ss_color = COLOR_CYAN
 		self.SoulSerpent.projectile_number = 2
+		self.ss_counter = 0
 
 		self.ss_attack_sound = pygame.mixer.Sound("assets/sounds/ss_attack.wav")
-		self.ss_repAttack_sound = pygame.mixer.Sound("assets/sounds/repeated.wav")
+		self.ss_repAttack2_sound = pygame.mixer.Sound("assets/sounds/repeated2.wav")
+		self.ss_repAttack3_sound = pygame.mixer.Sound("assets/sounds/repeated_end260.mp3")
 		self.ss_attack_sound.set_volume(0.5)
-		self.ss_repAttack_value = 0
-		self.ss_repAttack_sound.set_volume(self.ss_repAttack_value)
+		self.ss_repAttack_value = 0.05
+		self.ss_repAttack2_sound.set_volume(self.ss_repAttack_value)
+		self.ss_repAttack3_sound.set_volume(1)
 
 		#dash related variables
 		self.is_dashing = False
@@ -92,14 +99,11 @@ class Player(pygame.sprite.Sprite):
 		self.speed = PLAYER_SPEED
 
 		self.weapons = []
-		# self.add_weapon(MagicWand(self))
 		self.add_weapon(BulletWand(self))
 		self.add_weapon(SoulSerpent(self))
-		# self.add_weapon(SoulSerpent(self, color = COLOR_BLACK))
-		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
-		# self.add_weapon(ZephyxEdge(self))
+		self.add_weapon(ZephyxEdge(self))
 
-		
+
 
 ##############################################################
 	def add_weapon(self, weapon: BaseWeapon):
@@ -109,7 +113,6 @@ class Player(pygame.sprite.Sprite):
 			self.isSoulSerpent_unlocked = True
 		else:
 			self.weapons.append(weapon)
-
 
 ##############################################################
 	def load_sprite_sheet(self, path, frame_width, frame_height, columns, rows):
@@ -133,7 +136,6 @@ class Player(pygame.sprite.Sprite):
 		return frames
 
 ##############################################################
-
 	def load_soul_serpent_sprites(self):
 			attack_raw = pygame.image.load("assets/images/SoulSerpent_attack.png").convert_alpha()
 			attack_sprite = pygame.transform.scale(attack_raw, (PLAYER_HEIGHT, PLAYER_HEIGHT))
@@ -173,20 +175,26 @@ class Player(pygame.sprite.Sprite):
 ##############################################################
 	def trigger_soul_serpent_attack(self, current_time, all_sprites, projectile_group, sorted_enemies, is_chained=False):
 
+		self.ss_counter += 1
+
 		self.ss_attack_sound.play()
-		self.ss_repAttack_sound.play()
-		self.ss_repAttack_value = min(1, self.ss_repAttack_value + 0.2)
-		self.ss_repAttack_sound.set_volume(self.ss_repAttack_value)
+		self.ss_repAttack2_sound.play()
+		self.ss_repAttack_value = min(1, self.ss_repAttack_value * 2)
+		self.ss_repAttack2_sound.set_volume(self.ss_repAttack_value)
+		if self.ss_counter > 9:
+			self.ss_repAttack3_sound.play()
 
 		self.SoulSerpent.attack(all_sprites, projectile_group, sorted_enemies, self.ss_color)
 
 
 		if is_chained:
 			self.ss_window_ms *= 0.7
-			if (self.ss_color[1] > 0):
+			if (self.ss_counter <= 4):
 				self.ss_color = (0, self.ss_color[1] - 60, self.ss_color[2] -  75)
+			elif (self.ss_counter <= 8):
+				self.ss_color = (0, 0, 0)
 			else:
-				self.ss_color = (0, 0 , 0)
+				self.ss_color = (255, 255, 255)
 		else:
 			self.ss_window_ms = self.ss_initial_window_ms
 
@@ -208,7 +216,8 @@ class Player(pygame.sprite.Sprite):
 		self.set_soul_serpent_sprite(self.sprites[self.facing])
 		self.ss_color = COLOR_CYAN
 		self.SoulSerpent.projectile_number = 2
-		self.ss_repAttack_value = 0
+		self.ss_repAttack_value = 0.05
+		self.ss_counter = 0
 
 ##############################################################
 	def update_soul_serpent_state(self, current_time, e_just_pressed, all_sprites, projectile_group, sorted_enemies):
@@ -271,7 +280,6 @@ class Player(pygame.sprite.Sprite):
 				self.image = self.sprites[self.facing]
 
 				self.rect = self.image.get_rect(center=self.rect.center)
-
 
 ############################################################
 	def get_input(self, dt, all_sprites, projectile_group, sorted_enemies):
@@ -398,6 +406,15 @@ class Player(pygame.sprite.Sprite):
 		self.health = max(0, self.health - amount)
 		self.damage_invulnerable_until = now + self.damage_invulnerability_ms
 
+##############################################################
+	def gain_exp(self, amount):
+		self.exp += amount
+		if self.exp >= self.exp_to_next_level:
+			self.level += 1
+			self.exp -= self.exp_to_next_level
+			self.exp_to_next_level = int(self.exp_to_next_level * 1.25)
+
+##############################################################
 	def draw_charge_bar(self, surface):
 		if not self.isZephixEdge_unlocked and not self.isSoulSerpent_unlocked:
 			return
@@ -416,8 +433,9 @@ class Player(pygame.sprite.Sprite):
 		margin_right = 20
 		margin_bottom = 20
 
-		bar_x = SCREEN_WIDTH - margin_right - bar_width
-		bar_y = SCREEN_HEIGHT - margin_bottom - bar_height
+		surface_width, surface_height = surface.get_size()
+		bar_x = surface_width - margin_right - bar_width
+		bar_y = surface_height - margin_bottom - bar_height
 
 		bg_rect = pygame.Rect(bar_x, bar_y, bar_width, bar_height)
 		pygame.draw.rect(surface, (20, 20, 20), bg_rect)
@@ -433,3 +451,4 @@ class Player(pygame.sprite.Sprite):
 			else:
 				color = (0, 255, 255) if charge_ratio >= 1.0 else (0, 140, 255)
 			pygame.draw.rect(surface, color, fill_rect)
+

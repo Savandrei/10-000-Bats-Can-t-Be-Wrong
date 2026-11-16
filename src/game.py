@@ -8,18 +8,19 @@
 import pygame
 import math
 
-from src.settings import SCREEN_WIDTH, SCREEN_HEIGHT, FPS, COLOR_BG, TITLE
+import src.settings as settings
 from src.entites.player import Player
 from src.managers.spawner import Spawner
 from src.managers.collision import CollisionManager
 from src.ui.hud import HUD
+from src.ui.menus import pause_menu, start_menu
 
 
 class Game:
 	def __init__(self):
 		# display Setup
-		self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-		pygame.display.set_caption(TITLE)
+		self.screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+		pygame.display.set_caption(settings.TITLE)
 		self.clock = pygame.time.Clock()
 		self.running = True
 		self.paused = False
@@ -28,20 +29,20 @@ class Game:
 		self.all_sprites = pygame.sprite.Group()
 		self.enemies = pygame.sprite.Group()
 		self.projectiles = pygame.sprite.Group()
-		# self.pickups = pygame.sprite.Group()
+		self.pickups = pygame.sprite.Group()
 
 		# instantiate Entities & Systems
-		self.player = Player(pos=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+		self.player = Player(pos=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2))
 		self.all_sprites.add(self.player)
 
 		# initialize the HUD
 		self.hud = HUD(self.player, self.enemies)
 
-		self.spawner = Spawner(self.all_sprites, self.enemies, self.player)
+		self.spawner = Spawner(self.all_sprites, self.enemies, self.pickups, self.player)
 
-		self.pickups = pygame.sprite.Group()
 		self.collision_manager = CollisionManager(
-			self.player, self.enemies, self.projectiles, self.pickups,
+			self.player, self.all_sprites, self.enemies,
+			self.projectiles, self.pickups,
 		)
 
 	def handle_events(self):
@@ -51,8 +52,21 @@ class Game:
 			elif event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE:
 					self.paused = True
-				elif self.paused:
-					self.paused = False
+					choice = pause_menu(self.screen)
+					self.screen = pygame.display.get_surface()
+					if choice == "resume":
+						self.paused = False
+					if choice == "exit":
+						self.running = False
+					if choice == "main_menu":
+						choice2 = start_menu(self.screen)
+						if choice2 == "start":
+							self.reset_game()
+							self.paused = False
+						elif choice2 == "exit":
+							self.running = False
+
+
 
 	def update(self, dt):
 
@@ -69,7 +83,7 @@ class Game:
 
 	def render(self):
 		# clear screen with background color
-		self.screen.fill(COLOR_BG)
+		self.screen.fill(settings.COLOR_BG)
 
 		# draw all active sprites
 		self.all_sprites.draw(self.screen)
@@ -83,9 +97,25 @@ class Game:
 	def run(self):
 		while self.running:
 			# calculate delta time in seconds (e.g., 0.016s at 60 FPS)
-			dt = self.clock.tick(FPS) / 1000.0
+			dt = self.clock.tick(settings.FPS) / 1000.0
 
 			self.handle_events()
 			if not self.paused:
 				self.update(dt)
 			self.render()
+
+	def reset_game(self):
+		self.all_sprites.empty()
+		self.enemies.empty()
+		self.projectiles.empty()
+		self.pickups.empty()
+
+		self.player = Player(pos=(settings.SCREEN_WIDTH // 2, settings.SCREEN_HEIGHT // 2))
+		self.all_sprites.add(self.player)
+
+		self.hud = HUD(self.player, self.enemies)
+		self.spawner = Spawner(self.all_sprites, self.enemies, self.pickups, self.player)
+		self.collision_manager = CollisionManager(
+			self.player, self.all_sprites, self.enemies,
+			self.projectiles, self.pickups,
+		)
