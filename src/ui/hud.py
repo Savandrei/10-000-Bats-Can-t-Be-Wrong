@@ -1,13 +1,13 @@
 import pygame
 
-from src.settings import PLAYER_MAX_HP
+from src.settings import PLAYER_MAX_HP, UI_FONT_PATH
 
 class HUD:
 	def __init__(self, player, enemies):
 		self.player = player
 		self.enemies = enemies
-		self.font = pygame.font.Font(None, 24)
-		self.small_font = pygame.font.Font(None, 18)
+		self.font = pygame.font.Font(UI_FONT_PATH, 24)
+		self.small_font = pygame.font.Font(UI_FONT_PATH, 18)
 
 	# create hp bar
 	def _draw_bar(self, surface, rect, health, max_health):
