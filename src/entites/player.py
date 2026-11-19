@@ -1,6 +1,6 @@
 import pygame
 from src.settings import PLAYER_SPEED, PLAYER_HEIGHT, PLAYER_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP
-from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent, ZephyxEdge
+from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, MercurialMagnum, SoulSerpent, ZephyxEdge
 
 
 # pretty much just java code from this point on
@@ -67,7 +67,7 @@ class Player(pygame.sprite.Sprite):
 		self.speed = PLAYER_SPEED
 
 		self.weapons = []
-		self.add_weapon(BulletWand(self))
+		self.add_weapon(MercurialMagnum(self))
 		self.add_weapon(SoulSerpent(self))
 		self.add_weapon(ZephyxEdge(self))
 
