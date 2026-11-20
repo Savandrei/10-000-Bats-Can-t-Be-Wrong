@@ -19,7 +19,8 @@ TITLE = "10.000 bats can't be wrong"
 # to be written
 
 # grass colored picked with color wheel
-COLOR_BG = (80, 80, 80)
+# COLOR_BG = (80, 80, 80)
+COLOR_BG = (135, 176, 19)
 COLOR_CYAN = (0, 180, 255)
 COLOR_BLACK = (1, 2, 3)
 COLOR_CRIMSON = (255, 60, 40)
@@ -29,6 +30,9 @@ COLOR_CRIMSON = (255, 60, 40)
 # to be written
 
 # Player Base Stats
+PLAYER_HEIGHT = 90
+PLAYER_WIDTH = 60
+
 PLAYER_START_X = SCREEN_WIDTH // 2
 PLAYER_START_Y = SCREEN_HEIGHT // 2
 PLAYER_SPEED = 250
