@@ -13,6 +13,8 @@ SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 FPS = 180 #FPS = inf
 TITLE = "10.000 bats can't be wrong"
+UI_FONT_PATH = "assets/fonts/test.ttf"
+MENU_FONT_PATH = "assets/fonts/test.ttf"
 
 
 # Color Definitions (RGB)

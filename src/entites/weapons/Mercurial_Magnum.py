@@ -2,7 +2,7 @@ import pygame
 from .base_weapon import BaseWeapon
 from src.entites.projectiles import Bullet
 
-class BulletWand(BaseWeapon):
+class MercurialMagnum(BaseWeapon):
 	# auto-fires a bullet/blast at the nearest enemy on a set cooldown
 	def __init__(self, player):
 		super().__init__(player, cooldown=1.75, projectile_number=20) 

@@ -9,7 +9,7 @@ HOVER_COLOR = (170, 170, 170)
 BACKGROUND_COLOR = (1, 2, 3)
 
 def start_menu(screen):
-	font = pygame.font.SysFont("Corbel", 40)
+	font = pygame.font.Font(settings.MENU_FONT_PATH, 40)
 	clock = pygame.time.Clock()
 
 	button_width = 200

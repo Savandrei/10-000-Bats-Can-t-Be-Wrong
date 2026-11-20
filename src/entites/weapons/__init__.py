@@ -1,9 +1,7 @@
 from .base_weapon import BaseWeapon
-from .magic_wand import MagicWand
-from .slash import Slash
-from .meteorite import Meteorite
-from .bullet_wand import BulletWand
+from .Mercurial_Magnum import MercurialMagnum
 from .Soul_Serpent import SoulSerpent
 from .zephyx_edge import ZephyxEdge
+from .Censer_aura import CenserAura
 
-__all__ = ["BaseWeapon", "MagicWand", "Slash", "Meteorite", "BulletWand", "SoulSerpent", "ZephyxEdge"]
+__all__ = ["BaseWeapon", "MercurialMagnum", "SoulSerpent", "ZephyxEdge", "CenserAura"]
