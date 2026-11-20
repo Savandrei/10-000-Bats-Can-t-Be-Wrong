@@ -98,10 +98,10 @@ class Player(pygame.sprite.Sprite):
 		self.weapons = []
 		# self.add_weapon(MagicWand(self))
 		self.add_weapon(BulletWand(self))
-		# self.add_weapon(SoulSerpent(self))
+		self.add_weapon(SoulSerpent(self))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_BLACK))
 		# self.add_weapon(SoulSerpent(self, color = COLOR_CRIMSON))
-		self.add_weapon(ZephyxEdge(self))
+		# self.add_weapon(ZephyxEdge(self))
 
 
 
