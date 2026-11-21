@@ -18,6 +18,27 @@ class BaseEnemy(pygame.sprite.Sprite):
 		self.all_sprites = all_sprites
 		self.pickup_group = pickup_group
 
+	@staticmethod
+	def load_sprite_sheet(path, frame_width, frame_height, columns, rows):
+		sheet = pygame.image.load(path).convert_alpha()
+		cell_width = sheet.get_width() // columns
+		cell_height = sheet.get_height() // rows
+		frames = []
+
+		for row in range(rows):
+			for col in range(columns):
+				frame = pygame.Surface((cell_width, cell_height), pygame.SRCALPHA)
+				frame.blit(
+					sheet,
+					(0, 0),
+					(col * cell_width, row * cell_height, cell_width, cell_height),
+				)
+				frames.append(
+					pygame.transform.scale(frame, (frame_width, frame_height))
+				)
+
+		return frames
+
 	def update(self, dt, *args, **kwargs):
 		# go towards the player
 		target_pos = pygame.math.Vector2(self.target.rect.center)

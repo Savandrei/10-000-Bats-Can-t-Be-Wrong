@@ -1,6 +1,10 @@
 from .base_enemy import BaseEnemy
-from .bat import Bat
-from .zombie import Zombie
-from .slime import Slime
+from .cave_bat import CaveBat
+from .batling import Batling
+from .dreadwing import Dreadwing
+from .plaguewing import Plaguewing
+from .shrieker import Shrieker
+from .stone_gargoyle import StoneGargoyle
+from .flower_bat import FlowerBat
 
-__all__ = ["BaseEnemy", "Bat", "Zombie", "Slime"]
+__all__ = ["BaseEnemy", "Batling", "CaveBat", "Dreadwing", "Plaguewing", "Shrieker", "StoneGargoyle", "FlowerBat"]
