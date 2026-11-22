@@ -11,7 +11,6 @@ class Plaguewing(BaseEnemy):
 			speed=135,
 			health=85,
 			damage=14,
-			color=(95, 175, 85),
 			size=(32, 32),
 			exp_value=12,
 			all_sprites=all_sprites,

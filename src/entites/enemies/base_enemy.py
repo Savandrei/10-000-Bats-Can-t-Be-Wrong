@@ -1,12 +1,12 @@
 import pygame
 from src.entites.pickup import Exp_gem
+from src.managers.asset_loader import AssetLoader
 
 class BaseEnemy(pygame.sprite.Sprite):
-	def __init__(self, pos, target_player, speed, health, damage, color, size=(24, 24), exp_value=10, all_sprites = None, pickup_group = None):
+	def __init__(self, pos, target_player, speed, health, damage, size=(24, 24), exp_value=10, all_sprites = None, pickup_group = None):
 		super().__init__()
-		self.image = pygame.Surface(size, pygame.SRCALPHA)
-		pygame.draw.circle(self.image, color, (size[0] // 2, size[1] // 2), size[0] // 2)
-		self.rect = self.image.get_rect(center=pos)
+		self.rect = pygame.Rect(0, 0, *size)
+		self.rect.center = pos
 
 		self.pos = pygame.math.Vector2(pos)
 		self.target = target_player
@@ -20,24 +20,17 @@ class BaseEnemy(pygame.sprite.Sprite):
 
 	@staticmethod
 	def load_sprite_sheet(path, frame_width, frame_height, columns, rows):
-		sheet = pygame.image.load(path).convert_alpha()
-		cell_width = sheet.get_width() // columns
-		cell_height = sheet.get_height() // rows
-		frames = []
-
-		for row in range(rows):
-			for col in range(columns):
-				frame = pygame.Surface((cell_width, cell_height), pygame.SRCALPHA)
-				frame.blit(
-					sheet,
-					(0, 0),
-					(col * cell_width, row * cell_height, cell_width, cell_height),
-				)
-				frames.append(
-					pygame.transform.scale(frame, (frame_width, frame_height))
-				)
-
-		return frames
+		directional = AssetLoader.get_directional_frames(
+			path,
+			cols=columns,
+			rows=rows,
+			target_size=(frame_width, frame_height),
+		)
+		return [
+			frame
+			for direction in ("S", "N", "W", "E")
+			for frame in directional[direction]
+		]
 
 	def update(self, dt, *args, **kwargs):
 		# go towards the player

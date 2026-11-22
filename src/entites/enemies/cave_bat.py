@@ -9,7 +9,6 @@ class CaveBat(BaseEnemy):
 			speed=220,
 			health=35,
 			damage=8,
-			color=(145, 130, 165),
 			size=(24, 24),
 			exp_value=5,
 			all_sprites=all_sprites,

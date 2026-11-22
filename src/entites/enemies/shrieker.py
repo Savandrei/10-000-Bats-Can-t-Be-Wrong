@@ -52,7 +52,6 @@ class Shrieker(BaseEnemy):
 			speed=145,
 			health=75,
 			damage=10,
-			color=(90, 185, 235),
 			size=(28, 28),
 			exp_value=18,
 			all_sprites=all_sprites,

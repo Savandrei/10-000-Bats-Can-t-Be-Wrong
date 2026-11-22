@@ -9,7 +9,6 @@ class Dreadwing(BaseEnemy):
 			speed=115,
 			health=165,
 			damage=22,
-			color=(165, 45, 75),
 			size=(38, 38),
 			exp_value=22,
 			all_sprites=all_sprites,

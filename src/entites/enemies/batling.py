@@ -9,7 +9,6 @@ class Batling(BaseEnemy):
 			speed=245,
 			health=18,
 			damage=6,
-			color=(130, 210, 110),
 			size=(32, 32),
 			exp_value=3,
 			all_sprites=all_sprites,

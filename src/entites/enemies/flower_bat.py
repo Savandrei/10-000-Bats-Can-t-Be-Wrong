@@ -9,7 +9,6 @@ class FlowerBat(BaseEnemy):
 			speed=140,
 			health=110,
 			damage=15,
-			color=(215, 95, 155),
 			size=(32, 32),
 			exp_value=16,
 			all_sprites=all_sprites,

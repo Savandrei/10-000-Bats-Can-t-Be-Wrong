@@ -9,7 +9,6 @@ class StoneGargoyle(BaseEnemy):
 			speed=65,
 			health=340,
 			damage=32,
-			color=(105, 110, 120),
 			size=(46, 46),
 			exp_value=35,
 			all_sprites=all_sprites,
