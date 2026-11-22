@@ -20,6 +20,7 @@ class ZephyxEdgeSlash(pygame.sprite.Sprite):
 
 		self.player = player
 		self.pierce = 9999
+		self.lifesteal = 1
 		self.attack_sound = pygame.mixer.Sound("assets/sounds/scythe_attack.mp3")
 		self.attack_sound.set_volume(0.7)
 
@@ -127,7 +128,7 @@ class ZephyxEdge(BaseWeapon):
 
 	def __init__(self, player):
 		super().__init__(player, cooldown=10.0, projectile_number=1)
-		self.damage = 55
+		self.damage = 9999
 		self.spritesheet_path = "assets/images/phase2_spritesheet.png"
 		self.timer = 0
 

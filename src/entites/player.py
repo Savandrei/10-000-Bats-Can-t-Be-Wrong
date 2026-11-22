@@ -66,10 +66,10 @@ class Player(pygame.sprite.Sprite):
 		self.speed = PLAYER_SPEED
 
 		self.weapons = []
-		self.add_weapon(MercurialMagnum(self))
+		# self.add_weapon(MercurialMagnum(self))
 		self.add_weapon(SoulSerpent(self))
 		self.add_weapon(ZephyxEdge(self))
-		self.add_weapon(CenserAura(self))
+		# self.add_weapon(CenserAura(self))
 
 
 
@@ -257,6 +257,11 @@ class Player(pygame.sprite.Sprite):
 
 		self.health = max(0, self.health - amount)
 		self.damage_invulnerable_until = now + self.damage_invulnerability_ms
+
+##############################################################
+	def heal_damage(self, amount):
+
+		self.health = min(100, self.health + amount)
 
 ##############################################################
 	def gain_exp(self, amount):

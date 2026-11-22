@@ -12,7 +12,7 @@ class Spawner:
 
 		# timing and progression
 		self.timer = 0
-		self.spawn_interval = 0.30  # seconds
+		self.spawn_interval = 3.30  # seconds
 
 	def get_perimeter_pos(self):
 		screen_width, screen_height = pygame.display.get_surface().get_size()
