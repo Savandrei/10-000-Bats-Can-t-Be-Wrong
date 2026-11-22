@@ -30,7 +30,6 @@ class Player(pygame.sprite.Sprite):
 		#dash related variables
 		self.is_dashing = False
 		self.last_dash_time = 0
-		self.is_invincible = False
 		self.dash_dx = 0
 		self.dash_dy = 0
 		self.dash_duration = 60
@@ -190,7 +189,6 @@ class Player(pygame.sprite.Sprite):
 		if keys[pygame.K_LSHIFT] and not self.is_dashing:
 			if current_time - self.last_dash_time >= self.dash_cooldown: #time elapsed > cooldown
 				self.is_dashing = True
-				self.is_invincible = True
 				self.last_dash_time = current_time
 
 		return direction
@@ -221,7 +219,6 @@ class Player(pygame.sprite.Sprite):
 
 		if self.is_movement_locked():
 			self.is_dashing = False
-			self.is_invincible = False
 			self.speed = PLAYER_SPEED
 			direction = pygame.math.Vector2(0, 0)
 		else:
@@ -230,7 +227,6 @@ class Player(pygame.sprite.Sprite):
 				# if dash ends
 				if current_time - self.last_dash_time >= self.dash_duration:
 					self.is_dashing = False
-					self.is_invincible = False
 					self.speed = PLAYER_SPEED
 				else:
 					# if dash started or still is in effect
@@ -245,6 +241,11 @@ class Player(pygame.sprite.Sprite):
 		self.rect.center = (round(self.pos.x), round(self.pos.y))
 
 		self.no_offscreen_warriors()
+
+##############################################################
+	@property
+	def is_invincible(self):
+		return self.is_dashing or self.is_movement_locked()
 
 ##############################################################
 	def take_damage(self, amount):
