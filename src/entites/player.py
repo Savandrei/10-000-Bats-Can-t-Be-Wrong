@@ -1,6 +1,6 @@
 import pygame
 from src.settings import PLAYER_SPEED, PLAYER_HEIGHT, PLAYER_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP
-from src.entites.weapons import BaseWeapon, MagicWand, Slash, Meteorite, BulletWand, SoulSerpent, ZephyxEdge
+from src.entites.weapons import BaseWeapon, MercurialMagnum, SoulSerpent, ZephyxEdge, CenserAura
 
 
 # pretty much just java code from this point on
@@ -30,7 +30,6 @@ class Player(pygame.sprite.Sprite):
 		#dash related variables
 		self.is_dashing = False
 		self.last_dash_time = 0
-		self.is_invincible = False
 		self.dash_dx = 0
 		self.dash_dy = 0
 		self.dash_duration = 60
@@ -67,9 +66,10 @@ class Player(pygame.sprite.Sprite):
 		self.speed = PLAYER_SPEED
 
 		self.weapons = []
-		self.add_weapon(BulletWand(self))
+		# self.add_weapon(MercurialMagnum(self))
 		self.add_weapon(SoulSerpent(self))
 		self.add_weapon(ZephyxEdge(self))
+		# self.add_weapon(CenserAura(self))
 
 
 
@@ -189,7 +189,6 @@ class Player(pygame.sprite.Sprite):
 		if keys[pygame.K_LSHIFT] and not self.is_dashing:
 			if current_time - self.last_dash_time >= self.dash_cooldown: #time elapsed > cooldown
 				self.is_dashing = True
-				self.is_invincible = True
 				self.last_dash_time = current_time
 
 		return direction
@@ -220,7 +219,6 @@ class Player(pygame.sprite.Sprite):
 
 		if self.is_movement_locked():
 			self.is_dashing = False
-			self.is_invincible = False
 			self.speed = PLAYER_SPEED
 			direction = pygame.math.Vector2(0, 0)
 		else:
@@ -229,7 +227,6 @@ class Player(pygame.sprite.Sprite):
 				# if dash ends
 				if current_time - self.last_dash_time >= self.dash_duration:
 					self.is_dashing = False
-					self.is_invincible = False
 					self.speed = PLAYER_SPEED
 				else:
 					# if dash started or still is in effect
@@ -246,6 +243,11 @@ class Player(pygame.sprite.Sprite):
 		self.no_offscreen_warriors()
 
 ##############################################################
+	@property
+	def is_invincible(self):
+		return self.is_dashing or self.is_movement_locked()
+
+##############################################################
 	def take_damage(self, amount):
 		now = pygame.time.get_ticks()
 
@@ -255,6 +257,11 @@ class Player(pygame.sprite.Sprite):
 
 		self.health = max(0, self.health - amount)
 		self.damage_invulnerable_until = now + self.damage_invulnerability_ms
+
+##############################################################
+	def heal_damage(self, amount):
+
+		self.health = min(100, self.health + amount)
 
 ##############################################################
 	def gain_exp(self, amount):

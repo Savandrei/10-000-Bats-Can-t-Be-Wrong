@@ -1,5 +1,6 @@
 import pygame
 from src.entites.pickup import Exp_gem
+from src.entites.weapons import ZephyxEdgeSlash
 
 class CollisionManager:
 
@@ -26,6 +27,9 @@ class CollisionManager:
 
 				# reduce bullet pierce count
 				bullet.hit_enemy()
+
+				if isinstance(bullet, ZephyxEdgeSlash):
+					self.player.heal_damage(bullet.lifesteal)
 
 				# if the bullet was destroyed (pierce depleted), stop checking it against others
 				if not bullet.alive():

@@ -1,6 +1,6 @@
 import random
 import pygame
-from src.entites.enemies import Bat, Zombie, Slime
+from src.entites.enemies import CaveBat, Batling, Plaguewing, StoneGargoyle, Shrieker, Dreadwing, FlowerBat
 
 class Spawner:
 	# spawns off-screen at set intervals
@@ -12,7 +12,7 @@ class Spawner:
 
 		# timing and progression
 		self.timer = 0
-		self.spawn_interval = 0.03  # seconds
+		self.spawn_interval = 3.30  # seconds
 
 	def get_perimeter_pos(self):
 		screen_width, screen_height = pygame.display.get_surface().get_size()
@@ -38,7 +38,7 @@ class Spawner:
 			pos = self.get_perimeter_pos()
 
 			# for now, random choice
-			enemy_class = random.choices([Bat, Zombie, Slime], weights=[50, 30, 20])[0]
+			enemy_class = random.choices([Batling, CaveBat, Dreadwing, Plaguewing, Shrieker, StoneGargoyle, FlowerBat], weights=[20, 20, 20, 10, 10, 10, 10])[0]
 
 			# instantiate the chosen enemy and add to groups
 			enemy = enemy_class(pos = pos, target_player = self.target, all_sprites = self.all_sprites, pickup_group = self.pickup_group,)
