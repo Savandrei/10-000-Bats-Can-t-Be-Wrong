@@ -27,7 +27,7 @@ def start_menu(screen):
 			(start_button, "Start"),
 			(settings_button, "Settings"),
 			(exit_button, "Exit")
-			]
+		]
 
 		for event in pygame.event.get():
 			# if you want to exit the old fashioned way
@@ -53,7 +53,8 @@ def start_menu(screen):
 			# check if any of the buttons are hovered over
 			if button.collidepoint(mouse_pos):
 				color = HOVER_COLOR
-			else: color = BUTTON_COLOR
+			else:
+				color = BUTTON_COLOR
 			pygame.draw.rect(screen, color, button)
 
 			text = font.render(label, True, WHITE)
@@ -64,7 +65,7 @@ def start_menu(screen):
 		clock.tick(settings.FPS)
 
 def pause_menu(screen):
-	font = pygame.font.SysFont("Corbel", 40)
+	font = pygame.font.Font(settings.MENU_FONT_PATH, 40)
 	clock = pygame.time.Clock()
 
 	button_width = 200
@@ -79,7 +80,7 @@ def pause_menu(screen):
 		buttons = [
 			(resume_button, "Resume"),
 			(main_menu_button, "Main Menu")
-			]
+		]
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -101,7 +102,8 @@ def pause_menu(screen):
 			# check if any of the buttons are hovered over
 			if button.collidepoint(mouse_pos):
 				color = HOVER_COLOR
-			else: color = BUTTON_COLOR
+			else:
+				color = BUTTON_COLOR
 			pygame.draw.rect(screen, color, button)
 
 			text = font.render(label, True, WHITE)
@@ -112,7 +114,7 @@ def pause_menu(screen):
 		clock.tick(settings.FPS)
 
 def settings_menu(screen):
-	font = pygame.font.SysFont("Corbel", 30)
+	font = pygame.font.Font(settings.MENU_FONT_PATH, 30)
 	clock = pygame.time.Clock()
 
 	resolutions = [(800, 600), (1280, 720), (1920, 1080)]
@@ -124,11 +126,7 @@ def settings_menu(screen):
 	button_width = 240
 	button_height = 50
 	option_height = 45
-	button_x = (settings.SCREEN_WIDTH - button_width) // 2
 
-	res_button = pygame.Rect(button_x, 160, button_width, button_height)
-	fps_button = pygame.Rect(button_x, 260, button_width, button_height)
-	back_button = pygame.Rect(button_x, 460, button_width, button_height)
 	while True:
 		button_x = (settings.SCREEN_WIDTH - button_width) // 2
 
@@ -140,12 +138,16 @@ def settings_menu(screen):
 
 		# create the hitboxes for the dropdown options
 		other_res = [r for r in resolutions if r != current_res]
-		res_rects = [(pygame.Rect(button_x, res_button.bottom + i * option_height, button_width, option_height), r)
-					for i, r in enumerate(other_res)]
+		res_rects = [
+			(pygame.Rect(button_x, res_button.bottom + i * option_height, button_width, option_height), r)
+			for i, r in enumerate(other_res)
+		]
 
 		other_fps = [f for f in fps_options if f != settings.FPS]
-		fps_rects = [(pygame.Rect(button_x, fps_button.bottom + i * option_height, button_width, option_height), f)
-					for i, f in enumerate(other_fps)]
+		fps_rects = [
+			(pygame.Rect(button_x, fps_button.bottom + i * option_height, button_width, option_height), f)
+			for i, f in enumerate(other_fps)
+		]
 
 		mouse_pos = pygame.mouse.get_pos()
 		for event in pygame.event.get():
@@ -203,15 +205,8 @@ def settings_menu(screen):
 		screen.blit(fps_label, (button_x - 160, fps_button.centery - fps_label.get_height() // 2))
 
 		# placeholder symbols, will replace with something else later
-		if res_open:
-			res_arrow = "v"
-		else:
-			res_arrow = "<"
-
-		if fps_open:
-			fps_arrow = "v"
-		else:
-			fps_arrow = "<"
+		res_arrow = "v" if res_open else "<"
+		fps_arrow = "v" if fps_open else "<"
 
 		main_buttons = [
 			(res_button, f"{settings.SCREEN_WIDTH}x{settings.SCREEN_HEIGHT}  {res_arrow}"),
