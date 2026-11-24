@@ -1,5 +1,6 @@
 import pygame
-from src.settings import PLAYER_SPEED, PLAYER_HEIGHT, PLAYER_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT, DASH_SPEED, PLAYER_MAX_HP
+import src.settings as settings
+from src.settings import PLAYER_SPEED, PLAYER_HEIGHT, PLAYER_WIDTH, DASH_SPEED, PLAYER_MAX_HP
 from src.entites.weapons import BaseWeapon, MercurialMagnum, SoulSerpent, ZephyxEdge, CenserAura
 
 
@@ -198,9 +199,9 @@ class Player(pygame.sprite.Sprite):
 #############################################################
 	def no_offscreen_warriors(self):
 		self.rect.left = max(0, self.rect.left)
-		self.rect.right = min(SCREEN_WIDTH, self.rect.right)
+		self.rect.right = min(settings.SCREEN_WIDTH, self.rect.right)
 		self.rect.top = max(0, self.rect.top)
-		self.rect.bottom = min(SCREEN_HEIGHT, self.rect.bottom)
+		self.rect.bottom = min(settings.SCREEN_HEIGHT, self.rect.bottom)
 
 
 		# I would debug for hours bcuz I forgot abt this
