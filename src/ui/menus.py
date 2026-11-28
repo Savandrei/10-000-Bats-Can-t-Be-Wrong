@@ -17,11 +17,12 @@ def start_menu(screen):
 
 	while True:
 		button_x = (settings.SCREEN_WIDTH - button_width) // 2
+		button_y = (settings.SCREEN_HEIGHT - button_height) // 2
 
 		# create the hitboxes for the buttons
-		start_button = pygame.Rect(button_x, 260, button_width, button_height)
-		settings_button = pygame.Rect(button_x, 340, button_width, button_height)
-		exit_button = pygame.Rect(button_x, 420, button_width, button_height)
+		start_button = pygame.Rect(button_x, button_y - button_height - 20, button_width, button_height)
+		settings_button = pygame.Rect(button_x, button_y, button_width, button_height)
+		exit_button = pygame.Rect(button_x, button_y + button_height + 20, button_width, button_height)
 
 		buttons = [
 			(start_button, "Start"),
@@ -64,7 +65,7 @@ def start_menu(screen):
 		clock.tick(settings.FPS)
 
 def pause_menu(screen):
-	font = pygame.font.SysFont("Corbel", 40)
+	font = pygame.font.Font(settings.MENU_FONT_PATH, 40)
 	clock = pygame.time.Clock()
 
 	button_width = 200
@@ -72,9 +73,10 @@ def pause_menu(screen):
 
 	while True:
 		button_x = (settings.SCREEN_WIDTH - button_width) // 2
+		button_y = (settings.SCREEN_HEIGHT - button_height) // 2
 
-		resume_button = pygame.Rect(button_x, 300, button_width, button_height)
-		main_menu_button = pygame.Rect(button_x, 380, button_width, button_height)
+		resume_button = pygame.Rect(button_x, button_y - 50, button_width, button_height)
+		main_menu_button = pygame.Rect(button_x, button_y + 50, button_width, button_height)
 
 		buttons = [
 			(resume_button, "Resume"),
@@ -112,7 +114,7 @@ def pause_menu(screen):
 		clock.tick(settings.FPS)
 
 def settings_menu(screen):
-	font = pygame.font.SysFont("Corbel", 30)
+	font = pygame.font.Font(settings.MENU_FONT_PATH, 40)
 	clock = pygame.time.Clock()
 
 	resolutions = [(800, 600), (1280, 720), (1920, 1080)]
@@ -124,17 +126,14 @@ def settings_menu(screen):
 	button_width = 240
 	button_height = 50
 	option_height = 45
-	button_x = (settings.SCREEN_WIDTH - button_width) // 2
 
-	res_button = pygame.Rect(button_x, 160, button_width, button_height)
-	fps_button = pygame.Rect(button_x, 260, button_width, button_height)
-	back_button = pygame.Rect(button_x, 460, button_width, button_height)
 	while True:
 		button_x = (settings.SCREEN_WIDTH - button_width) // 2
+		button_y = (settings.SCREEN_HEIGHT - button_height) // 2
 
-		res_button = pygame.Rect(button_x, 160, button_width, button_height)
-		fps_button = pygame.Rect(button_x, 260, button_width, button_height)
-		back_button = pygame.Rect(button_x, 460, button_width, button_height)
+		res_button = pygame.Rect(button_x, button_y - 170, button_width, button_height)
+		fps_button = pygame.Rect(button_x, button_y - 80, button_width, button_height)
+		back_button = pygame.Rect(button_x, button_y + 120, button_width, button_height)
 
 		current_res = (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT)
 
@@ -197,10 +196,10 @@ def settings_menu(screen):
 
 		# draw the labels for the dropdowns
 		res_label = font.render("Resolution:", True, WHITE)
-		screen.blit(res_label, (button_x - 160, res_button.centery - res_label.get_height() // 2))
+		screen.blit(res_label, (button_x - 220, res_button.centery - res_label.get_height() // 2))
 
 		fps_label = font.render("Max FPS:", True, WHITE)
-		screen.blit(fps_label, (button_x - 160, fps_button.centery - fps_label.get_height() // 2))
+		screen.blit(fps_label, (button_x - 150, fps_button.centery - fps_label.get_height() // 2))
 
 		# placeholder symbols, will replace with something else later
 		if res_open:
